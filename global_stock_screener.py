@@ -36,7 +36,11 @@ def get_stock_info(ticker):
     try:
         stock = yf.Ticker(ticker.strip())
         info = stock.info
-        hist = stock.history(period="6mo")
+        hist = stock.history(period="2d")  # last 2 days for % change
+        if not hist.empty and len(hist) >= 2:
+            change = ((hist['Close'][-1] - hist['Close'][-2]) / hist['Close'][-2]) * 100
+        else:
+            change = None
         return {
             "Name": info.get("shortName"),
             "Sector": info.get("sector"),
@@ -46,7 +50,9 @@ def get_stock_info(ticker):
             "Dividend Yield": info.get("dividendYield"),
             "52W High": info.get("fiftyTwoWeekHigh"),
             "52W Low": info.get("fiftyTwoWeekLow"),
-            "Chart": hist["Close"] if not hist.empty else None
+            "% Change (1D)": round(change, 2) if change is not None else None,
+            "Volume": info.get("volume"),
+            "Chart": stock.history(period="6mo")["Close"]
         }
     except Exception as e:
         return {"Error": str(e)}
