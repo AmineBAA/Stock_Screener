@@ -3,7 +3,7 @@ import yfinance as yf
 import pandas as pd
 
 st.set_page_config(layout="wide")
-st.title("📊 Stock Comparison Dashboard (Finviz-style)")
+st.title("📊 Stock Comparison Dashboard")
 
 # Input
 tickers = st.text_input("Enter stock tickers (comma-separated)", "AAPL, MSFT, AMZN").upper().split(',')
